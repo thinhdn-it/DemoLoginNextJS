@@ -152,14 +152,14 @@ export default function Login() {
             >
               Login with Facebook
             </Button>
-            <Button
+            {/* <Button
               type="default"
               icon={<AppleOutlined />}
               onClick={handleAppleLogin}
               style={{ width: '100%' }}
             >
               Login with Apple
-            </Button>
+            </Button> */}
           </div>
         </div>
       ) : (
