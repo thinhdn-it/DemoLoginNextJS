@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../src/firebaseConfig';
+import { useRouter } from 'next/router';
 
 export default function Home() {
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -16,10 +18,29 @@ export default function Home() {
     return () => unsubscribe();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout Error:', error);
+    }
+  };
+
   return (
     <div>
       <h1>Home Page</h1>
-      {user ? <h2>Welcome, {user.displayName}!</h2> : <p>Please login to continue.</p>}
+      {user ? (
+        <div>
+          <h2>Welcome, {user.displayName}!</h2>
+          <button onClick={handleLogout}>Logout</button>
+        </div>
+      ) : (
+        <p>Please login to continue.</p>
+      )
+      }
     </div>
+    
   );
 }
